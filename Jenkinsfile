@@ -24,7 +24,7 @@ pipeline {
                 sh """
                   curl -s -X POST https://api.telegram.org/bot<8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ
 >/sendMessage \
-                  -d chat_id=<YOUR_CHAT_ID> \
+                  -d chat_id=<6739307757> \
                   -d text="${message}"
                 """
             }
