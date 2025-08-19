@@ -4,40 +4,28 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Building the project..."
-                // your build commands go here
-            }
-        }
-        stage('Test') {
-            steps {
-                echo "Running tests..."
-                // your test commands go here
+                echo 'Building...'
+                // your build steps here
             }
         }
     }
 
     post {
         success {
-            script {
-                def BOT_TOKEN = "8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ"
-                def CHAT_ID = "-1002921935948"
-                def MESSAGE = "✅ Build SUCCESS for job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})"
+            withCredentials([string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TOKEN')]) {
                 sh """
-                   curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
-                   -d chat_id=${CHAT_ID} \
-                   -d text="${MESSAGE}"
+                curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
+                -d chat_id=-1002921935948 \
+                -d text="✅ Build Success: Job $JOB_NAME Build #$BUILD_NUMBER"
                 """
             }
         }
         failure {
-            script {
-                def BOT_TOKEN = "8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ"
-                def CHAT_ID = "-1002921935948"
-                def MESSAGE = "❌ Build FAILED for job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})"
+            withCredentials([string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TOKEN')]) {
                 sh """
-                   curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
-                   -d chat_id=${CHAT_ID} \
-                   -d text="${MESSAGE}"
+                curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
+                -d chat_id=-1002921935948 \
+                -d text="❌ Build Failed: Job $JOB_NAME Build #$BUILD_NUMBER"
                 """
             }
         }
