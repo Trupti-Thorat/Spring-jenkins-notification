@@ -12,7 +12,7 @@ pipeline {
 
     post {
         success {
-            withCredentials([string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TOKEN')]) {
+            withCredentials([string(credentialsId: 'bot8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ', variable: 'TOKEN')]) {
                 sh """
                 curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
                 -d chat_id=-1002921935948 \
@@ -21,7 +21,7 @@ pipeline {
             }
         }
         failure {
-            withCredentials([string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TOKEN')]) {
+            withCredentials([string(credentialsId: 'bot8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ', variable: 'TOKEN')]) {
                 sh """
                 curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
                 -d chat_id=-1002921935948 \
