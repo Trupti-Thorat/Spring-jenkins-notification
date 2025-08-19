@@ -1,33 +1,20 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-                // your build steps here
-            }
+post {
+    success {
+        withCredentials([string(credentialsId: 'telegram-bot-token', variable: 'TOKEN')]) {
+            sh """
+                curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage \
+                -d chat_id=-1002921935948 \
+                -d text='✅ Build Success: Job spring-jenkins Build #${BUILD_NUMBER}'
+            """
         }
     }
-
-    post {
-        success {
-            withCredentials([string(credentialsId: 'telegram-bot-token', variable: 'TOKEN')]) {
-                sh """
-                curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
+    failure {
+        withCredentials([string(credentialsId: 'telegram-bot-token', variable: 'TOKEN')]) {
+            sh """
+                curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage \
                 -d chat_id=-1002921935948 \
-                -d text="✅ Build Success: Job $JOB_NAME Build #$BUILD_NUMBER"
-                """
-            }
-        }
-        failure {
-            withCredentials([string(credentialsId: 'telegram-bot-token', variable: 'TOKEN')]) {
-                sh """
-                curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
-                -d chat_id=-1002921935948 \
-                -d text="❌ Build Failed: Job $JOB_NAME Build #$BUILD_NUMBER"
-                """
-            }
+                -d text='❌ Build Failed: Job spring-jenkins Build #${BUILD_NUMBER}'
+            """
         }
     }
 }
