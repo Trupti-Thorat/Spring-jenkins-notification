@@ -4,15 +4,14 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo '🔨 Building Spring Boot app...'
-                bat './mvnw clean package -DskipTests'
+                echo "Building the project..."
+                // your build commands go here
             }
         }
-
         stage('Test') {
             steps {
-                echo '🧪 Running tests...'
-                bat './mvnw test'
+                echo "Running tests..."
+                // your test commands go here
             }
         }
     }
@@ -20,21 +19,25 @@ pipeline {
     post {
         success {
             script {
-                def message = "✅ Build SUCCESS for project: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-                bat """
-                  curl -s -X POST https://api.telegram.org/bot8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ/sendMessage ^
-                  -d chat_id=6739307757 ^
-                  -d text="${message}"
+                def BOT_TOKEN = "8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ"
+                def CHAT_ID = "-1002921935948"
+                def MESSAGE = "✅ Build SUCCESS for job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})"
+                sh """
+                   curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
+                   -d chat_id=${CHAT_ID} \
+                   -d text="${MESSAGE}"
                 """
             }
         }
         failure {
             script {
-                def message = "❌ Build FAILED for project: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-                bat """
-                  curl -s -X POST https://api.telegram.org/bot8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ/sendMessage ^
-                  -d chat_id=6739307757 ^
-                  -d text="${message}"
+                def BOT_TOKEN = "8322680324:AAEQSKGCwSIBXCfCObAG7FYbLCRaEyYU9MQ"
+                def CHAT_ID = "-1002921935948"
+                def MESSAGE = "❌ Build FAILED for job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})"
+                sh """
+                   curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
+                   -d chat_id=${CHAT_ID} \
+                   -d text="${MESSAGE}"
                 """
             }
         }
