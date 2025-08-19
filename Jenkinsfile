@@ -31,7 +31,7 @@ pipeline {
         success {
             echo "✅ Build successful!"
             withCredentials([string(credentialsId: 'telegram-bot-token', variable: 'TOKEN')]) {
-                sh """
+              bat """
                 curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
                     -d chat_id=-1002921935948 \
                     -d text="✅ Jenkins build SUCCESS on job: ${JOB_NAME} [#${BUILD_NUMBER}]"
@@ -41,7 +41,7 @@ pipeline {
         failure {
             echo "❌ Build failed!"
             withCredentials([string(credentialsId: 'telegram-bot-token', variable: 'TOKEN')]) {
-                sh """
+                bat """
                 curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
                     -d chat_id=-1002921935948 \
                     -d text="❌ Jenkins build FAILED on job: ${JOB_NAME} [#${BUILD_NUMBER}]"
